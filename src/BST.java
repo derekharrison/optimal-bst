@@ -5,7 +5,11 @@ public class BST {
     static int LARGE_NUM = 1000;
 
     static double[][][] dp;
-    static int[][] root;
+
+    static class OBST {
+        static double val;
+        static int[][] root;
+    }
 
     static double min(double a, double b) {
         double res = 0;
@@ -16,7 +20,7 @@ public class BST {
         return res;
     }
 
-    static double optimal_bst(int i, int j, int d, double[] p, double[] q) {
+    static double opt_bst(int i, int j, int d, double[] p, double[] q, int[][] root) {
         double res = LARGE_NUM;
 
         // Get results from memo table if available
@@ -35,11 +39,11 @@ public class BST {
 
         // Case is subtree
         if(j > i) {
-            double val1 = (d + 1) * p[i] + (d + 2) * q[i] + optimal_bst(i + 1, j, d + 1, p, q);
-            double val2 = (d + 1) * p[j] + (d + 2) * q[j + 1] + optimal_bst(i, j - 1, d + 1, p, q);
+            double val1 = (d + 1) * p[i] + (d + 2) * q[i] + opt_bst(i + 1, j, d + 1, p, q, root);
+            double val2 = (d + 1) * p[j] + (d + 2) * q[j + 1] + opt_bst(i, j - 1, d + 1, p, q, root);
             for(int k = i + 1; k <= j - 1; ++k) {
-                double val1_loc = optimal_bst(i, k - 1, d + 1, p, q);
-                double val2_loc = optimal_bst(k + 1, j, d + 1, p, q);
+                double val1_loc = opt_bst(i, k - 1, d + 1, p, q, root);
+                double val2_loc = opt_bst(k + 1, j, d + 1, p, q, root);
                 double res_loc = (d + 1) * p[k] + val1_loc + val2_loc;
 
                 // Get root
@@ -154,6 +158,19 @@ public class BST {
         }
     }
 
+    static OBST optimal_bst(double[] p, double[] q, int n) {
+
+        // Initialize memo and root tables
+        OBST obst = new OBST();
+        obst.root = new int[n][n];
+        dp = new double[n][n][n];
+
+        // Compute optimal binary search tree
+        obst.val = opt_bst(0, n - 1, 0, p, q, obst.root);
+
+        return obst;
+    }
+
     public static void main(String[] args) {
 
         // Number of nodes in bst
@@ -168,20 +185,16 @@ public class BST {
         init_vec(n + 1, q);
         set_vec(p, n, p_ref);
 
-        // Initialize memo and root tables
-        dp = new double[n][n][n];
-        root = new int[n + 1][n + 1];
-
         // Compute optimal bst
-        double opt_bst = optimal_bst(0, n - 1, 0, p, q);
+        OBST obst = optimal_bst(p, q, n);
 
         // Compute optimal bst using reference method
         double[][] e = optimal_bst_ref(p_ref, q, n);
 
         // Print results
-        print_optimal_bst(root, 0, n - 1, n);
+        print_optimal_bst(obst.root, 0, n - 1, n);
 
-        System.out.println("optimal bst cost: " + opt_bst);
+        System.out.println("optimal bst cost: " + obst.val);
         System.out.println("optimal bst cost reference method: " + e[1][n]);
     }
 }
