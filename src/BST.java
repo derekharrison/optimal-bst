@@ -41,7 +41,7 @@ public class BST {
             return val1 + val2 + val3;
         }
 
-        // Case is subtree
+        // Case is (sub) tree
         if(j > i) {
             double val1 = (d + 1) * p[i] + (d + 2) * q[i] + opt_bst(i + 1, j, d + 1, p, q, obst);
             double val2 = (d + 1) * p[j] + (d + 2) * q[j + 1] + opt_bst(i, j - 1, d + 1, p, q, obst);
@@ -50,7 +50,7 @@ public class BST {
                 double val2_loc = opt_bst(k + 1, j, d + 1, p, q, obst);
                 double res_loc = (d + 1) * p[k] + val1_loc + val2_loc;
 
-                // Get root
+                // Get (sub) root
                 if(res > res_loc) {
                     res = res_loc;
                     obst.root[i][j] = k;
