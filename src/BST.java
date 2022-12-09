@@ -5,23 +5,14 @@ public class BST {
     static int LARGE_NUM = 1000;
 
     static class OBST {
-        static double val;
-        static int[][] root;
-        static double[][][] dp;
+        double val;
+        int[][] root;
+        double[][][] dp;
     }
 
     static class OBST2 {
-        static double val;
-        static int[][] root;
-    }
-
-    static double min(double a, double b) {
-        double res = 0;
-
-        if(a < b) res = a;
-        else res = b;
-
-        return res;
+        double val;
+        int[][] root;
     }
 
     static double opt_bst(int i, int j, int d, double[] p, double[] q, OBST obst) {
